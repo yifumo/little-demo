@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>picture</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style>
+        *{margin: 0;padding: 0;box-sizing: border-box}
+        ul{
+            list-style: none;
+        }
+        #app{
+            background: #dddddd;
+            display: block;
+        }
+        .circle{
+            width: 4px;
+            height: 4px;
+            background: red;
+        }
+        .action{
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            padding: 8px;
+
+        }
+        .colors{
+            margin-top: 3px;
+        }
+      .colors>div{
+          float: left;
+          width: 25%;
+          height: 22px;
+      }
+        .active{
+            border: 3px solid white;
+        }
+        img{
+            width:30px;
+            height: 30px;
+        }
+        input{
+            display: none;
+            border: 1px solid;
+        }
+      .controls{
+          display: flex;
+          justify-content: space-between;
+      }
+
+    </style>
+    <script src='./jquery.min.js'></script>
+</head>
+<body>
+<div class="action">
+    <div class="controls">
+        <div id="pen">
+            <label><input type="radio" name="penType" value="pen" checked><img src="svg/edit.svg"></label>
+        </div>
+        <div id="eraser">
+            <label><input type="radio" name="penType" value="eraser"><img src="svg/eraser.svg" alt=""></label>
+        </div>
+        <button id="clear"><img src="svg/delete.svg" alt=""></button>
+        <button id="save"><img src="svg/down.svg" alt=""></button>
+    </div>
+    <div class="colors">
+        <div style="background: green" id="green" class="active"></div>
+        <div style="background: red" id="red"></div>
+        <div style="background: yellow" id="yellow"></div>
+        <div style="background: grey" id="grey"></div>
+    </div>
+</div>
+<canvas id="app"></canvas>
+<script>
+    let canvas = document.querySelector('#app')
+    let clientWidth = document.documentElement.clientWidth
+    let clientHeight = document.documentElement.clientHeight
+    canvas.width=clientWidth
+    canvas.height=clientHeight
+
+    let context = canvas.getContext('2d')
+
+    context.strokeStyle='green'
+
+    let previousPoint
+
+
+
+
+    canvas.addEventListener('touchmove',function (e) {
+        let penType = document.querySelector('input[name="penType"]:checked').value
+        let{pageX,pageY} = e.touches[0]
+        console.log(penType)
+        if(penType === 'pen'){
+         if(previousPoint){
+             context.beginPath()
+             context.moveTo(previousPoint.pageX,previousPoint.pageY)
+             context.lineTo(pageX,pageY)
+             context.stroke()
+         }
+         previousPoint={
+             'pageX': pageX,
+             'pageY': pageY
+         }
+
+        }
+        if(penType === 'eraser'){
+            context.clearRect(pageX-15,pageY-15,30,30)
+        }
+
+
+    })
+    canvas.addEventListener('touchend',function(e){
+        previousPoint = null
+
+    })
+
+    var clear = document.querySelector('#clear')
+    clear.addEventListener('click',function () {
+        context.clearRect(0,0,document.documentElement.clientWidth,document.documentElement.clientHeight)
+    })
+
+    var save = document.querySelector('#save')
+    save.addEventListener('click',function () {
+        var c=document.getElementById("app");
+        var d=c.toDataURL("image/png");
+        var w=window.open('about:blank','image from canvas');
+        w.document.write("<img src='"+d+"' alt='from canvas'/>");
+    })
+    var colors = document.querySelector('.colors')
+    $('.colors').on('click','div',function(e){
+        let div = $(e.currentTarget)
+        let index = div.index()
+        div.addClass('active')
+        div.siblings('.active').removeClass('active')
+        let id = div.attr("id")
+        console.log(id)
+        context.strokeStyle=id
+    })
+
+</script>
+
+</html>

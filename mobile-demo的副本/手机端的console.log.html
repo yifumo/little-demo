@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mobile</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        ul{
+            padding: 0;
+            list-style: none;
+            border: 3px solid green;
+            margin:0;
+        }
+        ul::after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+        li{
+            float: left;
+            width: 25%;
+            border: 1px solid red;
+        }
+        div{
+            background: #dddddd;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li>选项</li>
+    <li>选项</li>
+    <li>选项</li>
+    <li>选项</li>
+</ul>
+<div>
+    内容内容内容内容内容
+    <button id="btn">点我</button>
+</div>
+<script>
+    let div = document.createElement('div')
+    div.id = 'console'
+    document.body.appendChild(div)
+    div.style.position='fixed'
+    div.style.width='100%'
+    div.style.height='160px'
+    div.style.bottom='0'
+    div.style.left='0'
+    div.style.background='red'
+    div.style.fontSize='30px'
+    console.log = function (thing) {
+        div.innerText = thing
+
+    }
+
+
+    let button = document.querySelector('#btn')
+    console.log(button)
+    button.addEventListener('click',function () {
+        alert(1)
+    })
+</script>
+</body>
+</html>
